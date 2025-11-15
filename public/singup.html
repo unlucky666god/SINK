@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinc - Sign Up</title>
+    <link rel="stylesheet" href="/css/singup.css">
+    <style>
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .auth-links a {
+            color: #4493f8;
+            text-decoration: none;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #ff6b6b;
+            background-color: #2a1a1a;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+            border: 1px solid #ff6b6b;
+        }
+        .success-message {
+            color: #51cf66;
+            background-color: #1a2a1a;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+            border: 1px solid #51cf66;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #4493f8;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="content" id="content">
+        <main>
+            <div class="form" id="form">
+                <div class="logo" id="logo">
+                    <img src="" alt="logo">
+                </div>
+                <h2>Create Account</h2>
+                
+                <div id="error-message" class="error-message"></div>
+                <div id="success-message" class="success-message"></div>
+                <div id="loading" class="loading">Processing...</div>
+                
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" required 
+                           placeholder="Enter your username" minlength="3" maxlength="20">
+                    <div class="input-hint">3-20 characters</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required 
+                           placeholder="Enter your email">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required 
+                           placeholder="Enter your password" minlength="6">
+                    <div class="input-hint">At least 6 characters</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" name="confirm_password" id="confirm_password" required 
+                           placeholder="Confirm your password">
+                </div>
+                
+                <div class="singupBtn">
+                    <button type="submit" class="btn" id="signup-btn">Create Account</button>
+                </div>
+                
+                <div class="auth-links">
+                    <p>Already have an account? <a href="singin.html">Sign In</a></p>
+                    <p><a href="/">← Back to Home</a></p>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <div class="creator">Created by Gamma</div>
+        </footer>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Если уже авторизован - редирект на главную
+            if (await authManager.redirectIfAuthenticated()) {
+                return;
+            }
+            
+            const signupBtn = document.getElementById('signup-btn');
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+            const loadingDiv = document.getElementById('loading');
+
+            // Функция показа ошибки
+            function showError(message) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+                loadingDiv.style.display = 'none';
+            }
+
+            // Функция показа успеха
+            function showSuccess(message) {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+                loadingDiv.style.display = 'none';
+            }
+
+            // Функция показа загрузки
+            function showLoading() {
+                loadingDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+            }
+
+            // Функция скрытия всех сообщений
+            function hideMessages() {
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+                loadingDiv.style.display = 'none';
+            }
+
+            // Валидация формы
+            function validateForm() {
+                const username = usernameInput.value.trim();
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (!username || !email || !password || !confirmPassword) {
+                    showError('Please fill in all fields');
+                    return false;
+                }
+
+                if (username.length < 3) {
+                    showError('Username must be at least 3 characters');
+                    return false;
+                }
+
+                if (username.length > 20) {
+                    showError('Username must be less than 20 characters');
+                    return false;
+                }
+
+                const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                if (!emailRegex.test(email)) {
+                    showError('Please enter a valid email address');
+                    return false;
+                }
+
+                if (password.length < 6) {
+                    showError('Password must be at least 6 characters');
+                    return false;
+                }
+
+                if (password !== confirmPassword) {
+                    showError('Passwords do not match');
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Обработчик отправки формы
+            signupBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm()) {
+                    return;
+                }
+
+                const username = usernameInput.value.trim();
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+
+                showLoading();
+
+                try {
+                    const response = await fetch('/api/auth/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        showError(data.message || 'Registration failed. Please try again.');
+                        return;
+                    }
+
+                    showSuccess('Account created successfully! Redirecting...');
+
+                    // Сохраняем токен и данные пользователя
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    // Редирект через 1 секунду
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 1000);
+
+                } catch (error) {
+                    console.error('Registration error:', error);
+                    showError('Network error. Please check your connection and try again.');
+                }
+            });
+
+            // Обработчики ввода для скрытия ошибок при начале редактирования
+            const inputs = [usernameInput, emailInput, passwordInput, confirmPasswordInput];
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    hideMessages();
+                });
+            });
+
+            // Обработчик нажатия Enter
+            document.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    signupBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

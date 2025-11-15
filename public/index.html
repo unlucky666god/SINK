@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinc - Chat, Fun & Play</title>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="navbar">
+                <div class="leftbar">
+                    <div class="friends" data-section="friends-page">
+                        <img src="/static/imgs/friends.svg" alt="friends logo">
+                    </div>
+                    <div class="servers">
+                        <div class="server"></div>
+                        <div class="createserver">
+                            <img src="/static/imgs/add.svg" alt="Create server button">
+                        </div>
+                    </div>
+                </div>
+                <div class="rightbar">
+                    <div class="direct-column">
+                        <label class="direct-title title">DIRECT MESSAGES</label>
+                        <div class="direct">
+                            <div class="direct-position" data-section="chat-page" data-user="user1">
+                                <img src="#" alt="user logo">
+                                <div class="info">
+                                    <div class="position-name title">user name</div>
+                                    <label class="status subtitle">online</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-place">
+                        <img src="#" alt="logo" class="logo">
+                        <div class="info">
+                            <div class="name title">name</div>
+                            <label class="name-status subtitle">online</label>
+                        </div>
+                        <div class="control-panel">
+                            <div class="micro cpbtn">
+                                <img src="/static/imgs/mic.svg" alt="mic logo">
+                            </div>
+                            <div class="headphones cpbtn">
+                                <img src="/static/imgs/headphones.svg" alt="headphones logo">
+                            </div>
+                            <div class="settings cpbtn">
+                                <img src="/static/imgs/settings.svg" alt="settings logo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Friends page -->
+            <div class="friends-page section" id="friends-page">
+                <div class="friends-actions">
+                    <ul class="friends-btns">
+                        <li><a href="#" class="filter-btn" data-filter="all">All</a></li>
+                        <li><a href="#" class="filter-btn" data-filter="online">Online</a></li>
+                        <li><a href="#" class="filter-btn" data-filter="waiting">Waiting</a></li>
+                        <li><a href="#" class="filter-btn" data-filter="add">Add Friend</a></li>
+                    </ul>
+                </div>
+                <div class="friends-list">
+                    <div class="friend">
+                        <img src="#" alt="logo">
+                        <div class="info">
+                            <div class="name title">user</div>
+                            <div class="status subtitle">Offline</div>
+                        </div>
+                        <div class="actions-btns">
+                            <a href="#" class="action-btn" data-action="call"><img src="/static/imgs/call.svg" alt="call-logo" class="call"></a>
+                            <a href="#" class="action-btn" data-action="chat" data-user="user1"><img src="/static/imgs/chat.svg" alt="chat-logo" class="chat"></a>
+                            <a href="#" class="action-btn" data-action="delete"><img src="/static/imgs/delete.svg" alt="del-logo" class="delete"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="waiting-list" style="display: none;">
+                    <!-- Waiting requests will be populated here -->
+                </div>
+                <div class="add-friend-form" style="display: none;">
+                    <input type="text" id="friend-username" placeholder="Enter username" />
+                    <button id="send-request-btn">Add Friend</button>
+                    <button id="cancel-add-btn">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Chat page -->
+            <div class="chat-page section" id="chat-page" style="display: none;">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="chat-info">
+                            <img src="#" alt="user logo" class="user-logo">
+                            <div class="chat-title title">user name</div>
+                            <div class="chat-status subtitle">online</div>
+                        </div>
+                        <div class="chat-actions">
+                            <a href="#" class="add-friend-btn">Add Friend</a>
+                        </div>
+                    </div>
+                    <div class="chat-messages">
+                        <div class="message received">
+                            <img src="#" alt="user logo" class="message-logo">
+                            <div class="message-content">
+                                <div class="message-username title">user name</div>
+                                <div class="message-text subtitle">Hello! How are you?</div>
+                                <div class="message-time subtitle">12:30</div>
+                            </div>
+                        </div>
+                        <div class="message sent">
+                            <div class="message-content">
+                                <div class="message-username title">You</div>
+                                <div class="message-text subtitle">I'm good, thanks!</div>
+                                <div class="message-time subtitle">12:32</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="Type a message..." class="message-input">
+                        <button class="send-btn">
+                            <img src="/static/imgs/send.svg" alt="send icon">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/js/index.js"></script>
+    <script>
+        // Check if user is authenticated
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/singin.html';
+        }
+    </script>
+</body>
+</html>

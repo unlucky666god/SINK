@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz&display=swap');
+
+:root{
+    --main-background: #212529;
+    --sec-background: #343A40;
+    --text: #CED4DA;
+    --hover: #F8F9FA;
+    --link: #4493f8;
+    --ligth: #F8F9FA;
+    --black: #212529;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    /*font-family: "Yanone Kaffeesatz", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;*/
+    color: var(--text);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(-135deg, var(--ligth), transparent 0%),
+                linear-gradient(45deg, var(--black), transparent 200%);
+}
+
+input {
+    background-color: var(--main-background);
+    border-color: var(--borders);
+    border-radius: 5px;
+    border: 1px solid;
+    outline: 0;
+}
+
+main {
+    margin-top: 40vh;
+    flex: 1;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.form h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.user_name_place {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.password_place {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.singinBtn {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.btn {
+    height: 100%;
+    width: 100%;
+    padding: 3px;
+    background-color: var(--sec-background);
+    cursor: pointer;
+}
+
+.singinBtn::after {
+    content: "";
+    height: 1px;
+    background-color: var(--text);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    margin-top: 10px;
+}
+
+h3 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+footer {
+    margin: 10px;
+}
+
+h3 a {
+    color: var(--link);
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    border: 1px solid var(--hover);
+}

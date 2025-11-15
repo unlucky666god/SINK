@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinc - Sign In</title>
+    <link rel="stylesheet" href="/css/singin.css">
+    <style>
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .auth-links a {
+            color: #4493f8;
+            text-decoration: none;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #ff6b6b;
+            background-color: #2a1a1a;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+            border: 1px solid #ff6b6b;
+        }
+        .success-message {
+            color: #51cf66;
+            background-color: #1a2a1a;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+            border: 1px solid #51cf66;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #4493f8;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="content" id="content">
+        <main>
+            <div class="form" id="form">
+                <div class="logo" id="logo">
+                    <img src="" alt="logo">
+                </div>
+                <h2>Welcome Back</h2>
+                
+                <div id="error-message" class="error-message"></div>
+                <div id="success-message" class="success-message"></div>
+                <div id="loading" class="loading">Signing in...</div>
+                
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" required 
+                           placeholder="Enter your username">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required 
+                           placeholder="Enter your password">
+                </div>
+                
+                <div class="singinBtn">
+                    <button type="submit" class="btn" id="signin-btn">Sign In</button>
+                </div>
+                
+                <div class="auth-links">
+                    <p>New to Sinc? <a href="singup.html">Create an account</a></p>
+                    <p><a href="/">← Back to Home</a></p>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <div class="creator">Created by Gamma</div>
+        </footer>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Если уже авторизован - редирект на главную
+            if (await authManager.redirectIfAuthenticated()) {
+                return;
+            }
+            
+            const signinBtn = document.getElementById('signin-btn');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+            const loadingDiv = document.getElementById('loading');
+
+            // Функция показа ошибки
+            function showError(message) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+                loadingDiv.style.display = 'none';
+            }
+
+            // Функция показа успеха
+            function showSuccess(message) {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+                loadingDiv.style.display = 'none';
+            }
+
+            // Функция показа загрузки
+            function showLoading() {
+                loadingDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+            }
+
+            // Функция скрытия всех сообщений
+            function hideMessages() {
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+                loadingDiv.style.display = 'none';
+            }
+
+            // Валидация формы
+            function validateForm() {
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value;
+
+                if (!username || !password) {
+                    showError('Please fill in all fields');
+                    return false;
+                }
+
+                if (username.length < 3) {
+                    showError('Username must be at least 3 characters');
+                    return false;
+                }
+
+                if (password.length < 6) {
+                    showError('Password must be at least 6 characters');
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Обработчик отправки формы
+            signinBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm()) {
+                    return;
+                }
+
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value;
+
+                showLoading();
+
+                try {
+                    const response = await fetch('/api/auth/signin', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        showError(data.message || 'Sign in failed. Please check your credentials.');
+                        return;
+                    }
+
+                    showSuccess('Success! Redirecting...');
+
+                    // Сохраняем токен и данные пользователя
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    // Редирект на главную страницу
+                    window.location.href = '/index.html';
+
+                } catch (error) {
+                    console.error('Sign in error:', error);
+                    showError('Network error. Please check your connection and try again.');
+                }
+            });
+
+            // Обработчики ввода для скрытия ошибок при начале редактирования
+            const inputs = [usernameInput, passwordInput];
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    hideMessages();
+                });
+            });
+
+            // Обработчик нажатия Enter
+            document.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    signinBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

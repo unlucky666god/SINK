@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINC - Loading</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #CED4DA;
+        }
+        .loading-container {
+            text-align: center;
+        }
+        .spinner {
+            border: 4px solid #343434;
+            border-top: 4px solid #4493f8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .links {
+            margin-top: 20px;
+        }
+        .links a {
+            color: #4493f8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <h1>SINC Chat</h1>
+        <div class="spinner"></div>
+        <p>Loading...</p>
+        <div class="links">
+            <a href="/singin.html">Sign In</a> | 
+            <a href="/singup.html">Sign Up</a>
+        </div>
+    </div>
+
+    <script>
+        // Проверяем авторизацию и редиректим
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Проверяем валидность токена
+            fetch('/api/auth/verify', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/index.html';
+                } else {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/singin.html';
+                }
+            })
+            .catch(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/singin.html';
+            });
+        } else {
+            // Если нет токена, редирект на страницу входа
+            window.location.href = '/singin.html';
+        }
+    </script>
+</body>
+</html>

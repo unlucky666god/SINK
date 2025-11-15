@@ -1,0 +1,418 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Oxanium:wght@200..800&display=swap');
+
+:root {
+    --main-background: #111111;
+    --sec-background: #343434;
+    --text: #CED4DA;
+    --hover: #F8F9FA;
+    --link: #4493f8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: var(--text);
+}
+
+body {
+    background-color: var(--main-background);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* HEADER STYLES */
+.header {
+    display: flex;
+    width: 260px;
+    height: 100vh;
+    background-color: var(--main-background);
+}
+
+.navbar {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.leftbar {
+    width: 70px;
+    padding: 10px 5px;
+    background-color: var(--main-background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.leftbar::after {
+    content: "";
+    position: absolute;
+    height: 100vh;
+    width: 2px;
+    background-color: var(--sec-background);
+    top: 0;
+    right: 0;
+}
+
+.leftbar .friends, .createserver {
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.rightbar {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: var(--main-background);
+    padding: 10px;
+}
+
+.direct-title {
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.direct {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.direct-position {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.direct-position:hover {
+    background-color: var(--sec-background);
+}
+
+.direct-position img {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+}
+
+.position-name {
+    font-size: 14px;
+}
+
+.status {
+    font-size: 10px;
+}
+
+.direct-column {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.user-place {
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    margin-top: auto;
+    position: relative;
+}
+
+.user-place::before {
+    content: "";
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background-color: var(--main-background);
+    top: -10px;
+    left: 0;
+}
+
+.user-place .logo {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    margin-right: 8px;
+}
+
+.user-place .info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.name {
+    font-size: 14px;
+}
+
+.name-status {
+    font-size: 10px;
+}
+
+.control-panel {
+    display: flex;
+    gap: 5px;
+}
+
+.cpbtn {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.cpbtn:hover {
+    background-color: var(--main-background);
+}
+
+/* MAIN CONTENT STYLES */
+.main-content {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+/* Friends page styles */
+.friends-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.friends-actions {
+    margin-bottom: 20px;
+}
+
+.friends-btns {
+    display: flex;
+    list-style: none;
+    gap: 15px;
+    border-bottom: 1px solid var(--main-background);
+    padding-bottom: 10px;
+}
+
+.friends-btns li a {
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.friends-btns li a:hover {
+    background-color: var(--sec-background);
+}
+
+.friend {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: var(--sec-background);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    gap: 15px;
+}
+
+.friend img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.friend .call, .friend .chat, .friend .delete {
+    height: 20px;
+    width: 20px;
+}
+
+.friend .info {
+    flex: 1;
+}
+
+.actions-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.actions-btns a {
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.actions-btns a:hover {
+    background-color: var(--sec-background);
+}
+
+/* Chat page styles */
+.chat-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 40px);
+    background-color: var(--sec-background);
+    border-radius: 8px;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid var(--main-background);
+}
+
+.chat-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-info .user-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.chat-title {
+    font-family: "Orbitron", sans-serif;
+    font-size: 16px;
+}
+
+.chat-status {
+    font-family: "Oxanium", sans-serif;
+    font-size: 12px;
+}
+
+.chat-actions .add-friend-btn {
+    padding: 8px 16px;
+    background-color: var(--link);
+    border-radius: 4px;
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.chat-actions .add-friend-btn:hover {
+    background-color: var(--hover);
+    color: var(--main-background);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    display: flex;
+    gap: 10px;
+    max-width: 70%;
+}
+
+.message.received {
+    align-self: flex-start;
+}
+
+.message.sent {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.message-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.message-username {
+    font-family: "Orbitron", sans-serif;
+    font-size: 14px;
+}
+
+.message-text {
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+    background-color: var(--main-background);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.message-time {
+    font-family: "Oxanium", sans-serif;
+    font-size: 10px;
+    color: var(--text);
+    opacity: 0.7;
+}
+
+.chat-input {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid var(--main-background);
+}
+
+.message-input {
+    flex: 1;
+    background-color: var(--main-background);
+    border: 1px solid var(--sec-background);
+    border-radius: 4px;
+    padding: 8px;
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+    outline: none;
+}
+
+.message-input:focus {
+    border-color: var(--hover);
+}
+
+.send-btn {
+    background-color: var(--link);
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.2s;
+}
+
+.send-btn:hover {
+    background-color: var(--hover);
+}
+
+.send-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Typography */
+.title {
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.subtitle {
+    font-family: "Oxanium", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
