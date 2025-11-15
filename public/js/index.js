@@ -65,6 +65,40 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
+    // Function to render direct messages
+    function renderDirectMessages(friends) {
+      const directContainer = document.querySelector('.direct');
+      if (directContainer) {
+        // Clear existing except the template if any
+        const existing = directContainer.querySelectorAll('.direct-position');
+        existing.forEach(el => el.remove());
+
+        friends.forEach(friend => {
+          const directElement = document.createElement('div');
+          directElement.className = 'direct-position';
+          directElement.setAttribute('data-user', friend.id);
+          directElement.innerHTML = `
+            <img src="#" alt="user logo">
+            <div class="info">
+              <div class="position-name title">${friend.name}</div>
+              <label class="status subtitle">${friend.status}</label>
+            </div>
+          `;
+          directContainer.appendChild(directElement);
+        });
+
+        // Re-add event listeners
+        const newDirectPositions = directContainer.querySelectorAll('.direct-position');
+        newDirectPositions.forEach(pos => {
+          pos.addEventListener('click', (e) => {
+            e.preventDefault();
+            const userId = parseInt(pos.getAttribute('data-user'));
+            openChat(userId);
+          });
+        });
+      }
+    }
+
     // Function to render waiting list
     function renderWaitingList(waiting) {
       const waitingList = document.querySelector('.waiting-list');
@@ -100,9 +134,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Current filter
     let currentFilter = 'all';
+    let currentChatUser = null;
 
     // Function to show section
     function showSection(section) {
+      const friendsPage = document.querySelector('.friends-page');
+      const chatPage = document.querySelector('.chat-page');
+      friendsPage.style.display = ['friends', 'waiting', 'add'].includes(section) ? 'block' : 'none';
+      chatPage.style.display = section === 'chat' ? 'block' : 'none';
+
+      // Show sub-sections within friends-page
       const friendsList = document.querySelector('.friends-list');
       const waitingList = document.querySelector('.waiting-list');
       const addFriendForm = document.querySelector('.add-friend-form');
@@ -111,7 +152,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       addFriendForm.style.display = section === 'add' ? 'block' : 'none';
     }
 
+    // Function to open chat
+    function openChat(userId) {
+      const friend = user.friends.find(f => f.id === userId);
+      if (!friend) return;
+
+      currentChatUser = friend;
+      // Update chat header
+      const chatTitle = document.querySelector('.chat-title');
+      const chatStatus = document.querySelector('.chat-status');
+      if (chatTitle) chatTitle.textContent = friend.name;
+      if (chatStatus) chatStatus.textContent = friend.status;
+
+      showSection('chat');
+    }
+
     // Initial render
+    renderDirectMessages(user.friends || []);
     renderFriendsList(user.friends || [], currentFilter);
     renderWaitingList(user.waiting || []);
     showSection('friends');
@@ -133,6 +190,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     });
+
+    // Direct messages
+    const directPositions = document.querySelectorAll('.direct-position');
+    directPositions.forEach(pos => {
+      pos.addEventListener('click', (e) => {
+        e.preventDefault();
+        const userId = parseInt(pos.getAttribute('data-user'));
+        openChat(userId);
+      });
+    });
+
+    // Chat buttons in friends list
+    const friendsListContainer = document.querySelector('.friends-list');
+    if (friendsListContainer) {
+      friendsListContainer.addEventListener('click', (e) => {
+        const target = e.target.closest('.action-btn[data-action="chat"]');
+        if (target) {
+          e.preventDefault();
+          const userId = parseInt(target.getAttribute('data-user'));
+          openChat(userId);
+        }
+      });
+    }
 
     // Add friend functionality
     const sendRequestBtn = document.getElementById('send-request-btn');
@@ -221,6 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (userResponse.ok) {
               const updatedUser = await userResponse.json();
               user = updatedUser; // Update local user
+              renderDirectMessages(updatedUser.friends || []);
               renderFriendsList(updatedUser.friends || [], currentFilter);
               renderWaitingList(updatedUser.waiting || []);
             }

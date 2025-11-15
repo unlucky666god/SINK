@@ -37,6 +37,25 @@ db.serialize(() => {
       });
     }
   });
+
+  // Создание таблицы messages
+  db.run(`
+    CREATE TABLE IF NOT EXISTS messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      from_user INTEGER NOT NULL,
+      to_user INTEGER NOT NULL,
+      message TEXT NOT NULL,
+      date DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (from_user) REFERENCES users (id),
+      FOREIGN KEY (to_user) REFERENCES users (id)
+    )
+  `, (err) => {
+    if (err) {
+      console.error('Error creating messages table:', err);
+    } else {
+      console.log('Messages table created or already exists.');
+    }
+  });
 });
 
 module.exports = db;
