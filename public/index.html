@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sinc - Chat, Fun & Play</title>
     <link rel="stylesheet" href="/css/index.css">
 </head>
+
 <body>
     <div class="container">
         <header class="header">
@@ -75,9 +77,12 @@
                             <div class="status subtitle">Offline</div>
                         </div>
                         <div class="actions-btns">
-                            <a href="#" class="action-btn" data-action="call"><img src="/static/imgs/call.svg" alt="call-logo" class="call"></a>
-                            <a href="#" class="action-btn" data-action="chat" data-user="user1"><img src="/static/imgs/chat.svg" alt="chat-logo" class="chat"></a>
-                            <a href="#" class="action-btn" data-action="delete"><img src="/static/imgs/delete.svg" alt="del-logo" class="delete"></a>
+                            <a href="#" class="action-btn" data-action="call"><img src="/static/imgs/call.svg"
+                                    alt="call-logo" class="call"></a>
+                            <a href="#" class="action-btn" data-action="chat" data-user="user1"><img
+                                    src="/static/imgs/chat.svg" alt="chat-logo" class="chat"></a>
+                            <a href="#" class="action-btn" data-action="delete"><img src="/static/imgs/delete.svg"
+                                    alt="del-logo" class="delete"></a>
                         </div>
                     </div>
                 </div>
@@ -97,8 +102,27 @@
                     <div class="chat-header">
                         <div class="chat-info">
                             <img src="#" alt="user logo" class="user-logo">
-                            <div class="chat-title title">user name</div>
-                            <div class="chat-status subtitle">online</div>
+                            <div class="chat-info-block" id="chat-info-block">
+                                <div class="chat-title title">user name</div>
+                                <div class="chat-status subtitle">online</div>
+                            </div>
+                            <a href="#" class="create-group"><img src="/static/imgs/groupAdd.svg" alt="create group"></a>
+                        </div>
+                        <div class="chat-actions-right">
+                            <button class="chat-action-btn call-btn" id="start-call-btn" title="Start Call" style="display: none;">
+                                <img src="/static/imgs/call.svg" alt="call">
+                            </button>
+                            <div class="group-actions" style="display: none;">
+                                <button class="group-action-btn add-user-btn" title="Add User">
+                                    <img src="/static/imgs/groupAdd.svg" alt="add user">
+                                </button>
+                                <button class="group-action-btn group-info-btn" title="Group Info">
+                                    <img src="/static/imgs/info.svg" alt="group info">
+                                </button>
+                                <button class="group-action-btn delete-group-btn" title="Delete Group">
+                                    <img src="/static/imgs/delete.svg" alt="delete group">
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="chat-messages">
@@ -126,10 +150,116 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Create Group Modal -->
+            <div class="create-group-modal" id="create-group-modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Create Group</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="group-name" placeholder="Group name" class="group-name-input">
+                        <div class="friend-selection">
+                            <h3>Select Friends:</h3>
+                            <div class="friends-checkbox-list" id="friends-checkbox-list">
+                                <!-- Friends checkboxes will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-cancel" id="cancel-group-btn">Cancel</button>
+                        <button class="btn-create" id="create-group-btn">Create Group</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Group Info Modal -->
+            <div class="group-info-modal" id="group-info-modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Group Members</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="members-list" id="members-list">
+                            <!-- Members will be populated here -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-cancel" id="close-info-btn">Close</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add User to Group Modal -->
+            <div class="add-user-modal" id="add-user-modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Add User to Group</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="friend-selection">
+                            <h3>Select Friend:</h3>
+                            <div class="friends-checkbox-list" id="add-user-friends-list">
+                                <!-- Available friends will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-cancel" id="cancel-add-user-btn">Cancel</button>
+                        <button class="btn-create" id="confirm-add-user-btn">Add User</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call Interface -->
+            <div class="call-interface" id="call-interface" style="display: none;">
+                <div class="call-header">
+                    <h2 class="call-title">Call with <span id="call-participant-name">User</span></h2>
+                </div>
+                <div class="call-participants" id="call-participants">
+                    <!-- Participant video cards will be populated here -->
+                </div>
+                <div class="call-controls">
+                    <button class="call-control-btn" id="toggle-mic-btn" title="Mute/Unmute">
+                        <img src="/static/imgs/mic.svg" alt="microphone">
+                    </button>
+                    <button class="call-control-btn" id="toggle-audio-btn" title="Deafen/Undeafen">
+                        <img src="/static/imgs/headphones.svg" alt="audio">
+                    </button>
+                    <button class="call-control-btn" id="toggle-screen-btn" title="Share Screen">
+                        <img src="/static/imgs/shareScreen.svg" alt="screen share">
+                    </button>
+                    <button class="call-control-btn end-call-btn" id="end-call-btn" title="End Call">
+                        <img src="/static/imgs/callEnd.svg" alt="end call">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Incoming Call Notification -->
+            <div class="incoming-call-notification" id="incoming-call-notification" style="display: none;">
+                <div class="call-notification-content">
+                    <div class="call-notification-header">
+                        <h3>Incoming Call</h3>
+                    </div>
+                    <div class="call-notification-body">
+                        <p><span id="caller-name">User</span> is calling...</p>
+                    </div>
+                    <div class="call-notification-actions">
+                        <button class="btn-accept" id="accept-call-btn">Accept</button>
+                        <button class="btn-decline" id="decline-call-btn">Decline</button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/call.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/friends.js"></script>
     <script src="/js/index.js"></script>
 </body>
+
 </html>

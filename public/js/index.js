@@ -29,8 +29,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       userNameElement.textContent = user.name;
     }
 
+    // Fetch dialogues
+    const dialoguesResponse = await fetch('/api/dialogues', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    const dialogues = await dialoguesResponse.json();
+
+    // Set global dialogues
+    window.dialogues = dialogues;
+
+    // Initialize Socket.io
+    initSocket();
+    
+    // Load groups
+    loadGroups();
+    
     // Initial render
-    renderDirectMessages(user.friends || []);
+    renderDirectMessages(dialogues);
     renderFriendsList(user.friends || [], currentFilter);
     renderWaitingList(user.waiting || []);
     showSection('friends');

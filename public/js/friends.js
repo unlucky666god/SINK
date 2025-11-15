@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const userId = parseInt(target.getAttribute('data-user'));
         if (!userId) return;
 
-        if (!confirm('Are you sure you want to remove this friend?')) return;
 
         try {
           const response = await fetch('/api/friends/remove', {

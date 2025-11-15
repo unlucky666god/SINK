@@ -277,6 +277,33 @@ body {
     gap: 10px;
 }
 
+.chat-actions-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-action-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-action-btn:hover {
+    background-color: var(--main-background);
+}
+
+.chat-action-btn img {
+    width: 20px;
+    height: 20px;
+}
+
 .chat-info .user-logo {
     width: 40px;
     height: 40px;
@@ -415,4 +442,540 @@ body {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+}
+
+.chat-info .chat-info-block {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.chat-info .create-group {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.chat-info .create-group:hover {
+    opacity: 0.7;
+}
+
+/* Groups section */
+.groups-section {
+    margin-top: 20px;
+}
+
+.groups-title {
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.groups-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.group-item {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.group-item:hover {
+    background-color: var(--sec-background);
+}
+
+.group-item img {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+}
+
+.group-name {
+    font-size: 14px;
+}
+
+.group-members {
+    font-size: 10px;
+}
+
+/* Create Group Modal */
+.create-group-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--sec-background);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--main-background);
+}
+
+.modal-header h2 {
+    font-family: "Orbitron", sans-serif;
+    font-size: 20px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.close-modal:hover {
+    background-color: var(--main-background);
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.group-name-input {
+    width: 100%;
+    background-color: var(--main-background);
+    border: 1px solid var(--sec-background);
+    border-radius: 4px;
+    padding: 10px;
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+.group-name-input:focus {
+    border-color: var(--hover);
+}
+
+.friend-selection h3 {
+    font-family: "Orbitron", sans-serif;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.friends-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.friend-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--main-background);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.friend-checkbox-item:hover {
+    background-color: rgba(206, 212, 218, 0.1);
+}
+
+.friend-checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.friend-checkbox-item label {
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid var(--main-background);
+}
+
+.btn-cancel, .btn-create {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-cancel {
+    background-color: var(--main-background);
+    color: var(--text);
+}
+
+.btn-cancel:hover {
+    background-color: rgba(206, 212, 218, 0.1);
+}
+
+.btn-create {
+    background-color: var(--link);
+    color: var(--text);
+}
+
+.btn-create:hover {
+    background-color: var(--hover);
+    color: var(--main-background);
+}
+
+.empty-message {
+    text-align: center;
+    padding: 20px;
+    color: var(--text);
+    opacity: 0.7;
+    font-family: "Oxanium", sans-serif;
+}
+
+/* Group action buttons */
+.group-actions {
+    display: none;
+    gap: 10px;
+    align-items: center;
+}
+
+.group-action-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.group-action-btn:hover {
+    background-color: var(--main-background);
+}
+
+.group-action-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Members list in group info modal */
+.members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--main-background);
+    border-radius: 4px;
+}
+
+.member-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.member-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.member-name {
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+}
+
+.delete-member-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-member-btn:hover {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.delete-member-btn img {
+    width: 16px;
+    height: 16px;
+}
+
+/* Additional modal styles */
+.group-info-modal,
+.add-user-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Call Interface */
+.call-interface {
+    position: fixed;
+    top: 0;
+    left: 260px;
+    right: 0;
+    bottom: 0;
+    background-color: var(--main-background);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+}
+
+.call-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--sec-background);
+}
+
+.call-title {
+    font-family: "Orbitron", sans-serif;
+    font-size: 20px;
+    text-align: center;
+}
+
+.call-participants {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.participant-card {
+    background-color: var(--sec-background);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 16/9;
+}
+
+.participant-card video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.participant-card.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 260px;
+    right: 0;
+    bottom: 80px;
+    grid-column: 1 / -1;
+    aspect-ratio: unset;
+    z-index: 1000;
+}
+
+.participant-info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+}
+
+.participant-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+.participant-control-btn {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.participant-control-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.participant-control-btn img {
+    width: 16px;
+    height: 16px;
+}
+
+.call-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    border-top: 1px solid var(--sec-background);
+    background-color: var(--main-background);
+}
+
+.call-control-btn {
+    background-color: var(--sec-background);
+    border: none;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+}
+
+.call-control-btn:hover {
+    background-color: var(--hover);
+}
+
+.call-control-btn.end-call-btn {
+    background-color: #dc3545;
+}
+
+.call-control-btn.end-call-btn:hover {
+    background-color: #c82333;
+}
+
+.call-control-btn img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Incoming Call Notification */
+.incoming-call-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    background-color: var(--sec-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.call-notification-content {
+    padding: 20px;
+}
+
+.call-notification-header h3 {
+    font-family: "Orbitron", sans-serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.call-notification-body p {
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.call-notification-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-accept,
+.btn-decline {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-family: "Oxanium", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-accept {
+    background-color: #28a745;
+    color: var(--text);
+}
+
+.btn-accept:hover {
+    background-color: #218838;
+}
+
+.btn-decline {
+    background-color: #dc3545;
+    color: var(--text);
+}
+
+.btn-decline:hover {
+    background-color: #c82333;
 }

@@ -56,6 +56,24 @@ db.serialize(() => {
       console.log('Messages table created or already exists.');
     }
   });
+
+  // Создание таблицы groups
+  db.run(`
+    CREATE TABLE IF NOT EXISTS groups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      users TEXT NOT NULL,
+      created_by INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (created_by) REFERENCES users (id)
+    )
+  `, (err) => {
+    if (err) {
+      console.error('Error creating groups table:', err);
+    } else {
+      console.log('Groups table created or already exists.');
+    }
+  });
 });
 
 module.exports = db;
