@@ -147,6 +147,56 @@ app.post('/api/friends/accept', authenticateToken, (req, res) => {
   });
 });
 
+// Удаление друга
+app.post('/api/friends/remove', authenticateToken, (req, res) => {
+  const { id } = req.body;
+  if (!id) return res.status(400).json({ message: 'ID is required.' });
+
+  // Get current user
+  db.get('SELECT friends FROM users WHERE id = ?', [req.user.id], (err, user) => {
+    if (err) {
+      console.error('Database error on get user:', err);
+      return res.status(500).json({ message: 'Database error.' });
+    }
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+
+    let friends = JSON.parse(user.friends || '[]');
+
+    if (!friends.includes(id)) return res.status(400).json({ message: 'Not friends.' });
+
+    // Remove from friends
+    friends = friends.filter(f => f != id);
+
+    // Update current user
+    db.run('UPDATE users SET friends = ? WHERE id = ?', [JSON.stringify(friends), req.user.id], (err2) => {
+      if (err2) {
+        console.error('Database error on update user:', err2);
+        return res.status(500).json({ message: 'Database error.' });
+      }
+
+      // Update target user: remove from friends
+      db.get('SELECT friends FROM users WHERE id = ?', [id], (err3, target) => {
+        if (err3) {
+          console.error('Database error on get target:', err3);
+          return res.status(500).json({ message: 'Database error.' });
+        }
+        if (!target) return res.status(404).json({ message: 'Target user not found.' });
+
+        let targetFriends = JSON.parse(target.friends || '[]');
+        targetFriends = targetFriends.filter(f => f != req.user.id);
+
+        db.run('UPDATE users SET friends = ? WHERE id = ?', [JSON.stringify(targetFriends), id], (err4) => {
+          if (err4) {
+            console.error('Database error on update target:', err4);
+            return res.status(500).json({ message: 'Database error.' });
+          }
+          res.json({ message: 'Friend removed.' });
+        });
+      });
+    });
+  });
+});
+
 // Отклонение запроса в друзья
 app.post('/api/friends/cancel', authenticateToken, (req, res) => {
   const { id } = req.body;

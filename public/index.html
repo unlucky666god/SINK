@@ -100,9 +100,6 @@
                             <div class="chat-title title">user name</div>
                             <div class="chat-status subtitle">online</div>
                         </div>
-                        <div class="chat-actions">
-                            <a href="#" class="add-friend-btn">Add Friend</a>
-                        </div>
                     </div>
                     <div class="chat-messages">
                         <div class="message received">
@@ -131,12 +128,8 @@
             </div>
         </main>
     </div>
+    <script src="/js/ui.js"></script>
+    <script src="/js/friends.js"></script>
     <script src="/js/index.js"></script>
-    <script>
-        // Check if user is authenticated
-        if (!localStorage.getItem('token')) {
-            window.location.href = '/singin.html';
-        }
-    </script>
 </body>
 </html>
