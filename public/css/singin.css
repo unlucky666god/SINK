@@ -43,7 +43,10 @@ input {
 }
 
 main {
-    margin-top: 40vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     flex: 1;
 }
 
@@ -113,4 +116,33 @@ h3 a {
 
 input[type=text]:focus, input[type=password]:focus {
     border: 1px solid var(--hover);
+}
+
+.logo img{
+    height: 80px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: start;
+    margin-bottom: 10px;
+}
+
+.input-group input {
+    padding: 3px;
+}
+
+.singinBtn button{
+    border-radius: 5px;
+    transition: all 0.15s ease-in-out;
+}
+
+.singinBtn button:hover {
+    transform: scale(1.05);
+}
+
+.singinBtn button:active {
+    transform: scale(0.95);
 }

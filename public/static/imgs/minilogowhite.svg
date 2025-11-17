@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79.58 83.81">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-family: Audiowide-Regular, Audiowide;
+        font-size: 72px;
+      }
+    </style>
+  </defs>
+  <g id="_Слой_3" data-name="Слой 3">
+    <circle cx="39.79" cy="39.79" r="39.79"/>
+  </g>
+  <g id="_Слой_1" data-name="Слой 1">
+    <text class="cls-2" transform="translate(11.77 63.28)"><tspan x="0" y="0">S</tspan></text>
+  </g>
+  <g id="_Слой_2" data-name="Слой 2">
+    <polygon points="15.57 63.28 29.94 54.1 13.81 53.87 15.57 63.28"/>
+    <polygon points="60.92 12.86 46.55 22.04 62.68 22.26 60.92 12.86"/>
+    <path class="cls-1" d="M75.88,17.76c1.93,0,1.93-3,0-3s-1.93,3,0,3h0Z"/>
+  </g>
+</svg>

@@ -203,7 +203,22 @@ async function createPeerConnection(userId) {
   peerConnections.set(userId, pc);
   
   // Add local stream tracks
-  if (localStream) {
+  if (isSharingScreen && screenStream) {
+    // If screen sharing is active, send screen video
+    const videoTrack = screenStream.getVideoTracks()[0];
+    if (videoTrack) {
+      pc.addTrack(videoTrack, screenStream);
+    }
+    
+    // Always add microphone audio from localStream
+    if (localStream) {
+      const audioTrack = localStream.getAudioTracks()[0];
+      if (audioTrack) {
+        pc.addTrack(audioTrack, localStream);
+      }
+    }
+  } else if (localStream) {
+    // Normal mode: send camera video and microphone audio
     localStream.getTracks().forEach(track => {
       pc.addTrack(track, localStream);
     });
@@ -235,35 +250,56 @@ async function createPeerConnection(userId) {
   });
 }
 
-// Handle WebRTC offer
+// Handle WebRTC offer (supports renegotiation)
 async function handleOffer(data) {
-  const pc = new RTCPeerConnection(configuration);
-  peerConnections.set(data.from, pc);
-  
-  // Add local stream tracks
-  if (localStream) {
-    localStream.getTracks().forEach(track => {
-      pc.addTrack(track, localStream);
-    });
-  }
-  
-  // Handle incoming tracks
-  pc.ontrack = (event) => {
-    console.log('Received track from:', data.from);
-    addParticipantVideo(data.from, event.streams[0], false);
-  };
-  
-  // Handle ICE candidates
-  pc.onicecandidate = (event) => {
-    if (event.candidate) {
-      socket.emit('webrtc_ice_candidate', {
-        to: data.from,
-        candidate: event.candidate
+  let pc = peerConnections.get(data.from);
+  if (!pc) {
+    pc = new RTCPeerConnection(configuration);
+    peerConnections.set(data.from, pc);
+    
+    // Add local stream tracks for new connection
+    if (isSharingScreen && screenStream) {
+      // If screen sharing is active, send screen video
+      const videoTrack = screenStream.getVideoTracks()[0];
+      if (videoTrack) {
+        pc.addTrack(videoTrack, screenStream);
+      }
+      
+      // Always add microphone audio from localStream
+      if (localStream) {
+        const audioTrack = localStream.getAudioTracks()[0];
+        if (audioTrack) {
+          pc.addTrack(audioTrack, localStream);
+        }
+      }
+    } else if (localStream) {
+      // Normal mode: send camera video and microphone audio
+      localStream.getTracks().forEach(track => {
+        pc.addTrack(track, localStream);
       });
     }
-  };
+    
+    // Handle incoming tracks
+    pc.ontrack = (event) => {
+      console.log('Received track from:', data.from);
+      addParticipantVideo(data.from, event.streams[0], false);
+    };
+    
+    // Handle ICE candidates
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit('webrtc_ice_candidate', {
+          to: data.from,
+          candidate: event.candidate
+        });
+      }
+    };
+  }
   
+  // Set remote description (for both initial and renegotiation)
   await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+  
+  // Create and set answer
   const answer = await pc.createAnswer();
   await pc.setLocalDescription(answer);
   
@@ -453,31 +489,46 @@ async function toggleScreenShare() {
   if (!isSharingScreen) {
     try {
       screenStream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: true  // Include system audio
+        video: {
+          cursor: "always"
+        },
+        audio: false  // Don't include system audio to avoid conflicts
       });
       
-      // Replace video track in all peer connections
+      // Replace or add video track in all peer connections
       const videoTrack = screenStream.getVideoTracks()[0];
-      peerConnections.forEach((pc) => {
-        const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
-        if (sender) {
-          sender.replaceTrack(videoTrack);
-        }
-      });
       
-      // Add audio track if available
-      const audioTracks = screenStream.getAudioTracks();
-      if (audioTracks.length > 0) {
-        peerConnections.forEach((pc) => {
-          pc.addTrack(audioTracks[0], screenStream);
+      for (const [userId, pc] of peerConnections.entries()) {
+        let sender = pc.getSenders().find(s => s.track?.kind === 'video');
+        
+        if (sender) {
+          // Replace existing video track
+          await sender.replaceTrack(videoTrack);
+        } else {
+          // Add new video track if no video sender exists
+          sender = pc.addTrack(videoTrack, screenStream);
+        }
+        
+        // Renegotiate to ensure changes take effect
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        socket.emit('webrtc_offer', {
+          to: userId,
+          offer: offer
         });
+        
+        console.log('Screen share updated and negotiated with user:', userId);
       }
       
-      // Update own video
-      const ownVideo = document.querySelector(`#participant-${window.user.id} video`);
-      if (ownVideo) {
-        ownVideo.srcObject = screenStream;
+      // Update own video to show screen share
+      const ownCard = document.querySelector(`#participant-${window.user.id}`);
+      if (ownCard) {
+        const ownVideo = ownCard.querySelector('video');
+        if (ownVideo) {
+          // Show screen stream instead of camera
+          ownVideo.srcObject = screenStream;
+          ownVideo.style.display = 'block';
+        }
       }
       
       isSharingScreen = true;
@@ -500,26 +551,49 @@ async function toggleScreenShare() {
 }
 
 // Stop screen sharing
-function stopScreenShare() {
+async function stopScreenShare() {
   if (screenStream) {
     screenStream.getTracks().forEach(track => track.stop());
     screenStream = null;
   }
   
-  // Restore camera video
-  if (localStream) {
-    const videoTrack = localStream.getVideoTracks()[0];
-    peerConnections.forEach((pc) => {
-      const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
-      if (sender) {
-        sender.replaceTrack(videoTrack);
+  // Restore camera video or remove video track
+  for (const [userId, pc] of peerConnections.entries()) {
+    const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+    if (sender) {
+      if (localStream && localStream.getVideoTracks().length > 0) {
+        // Restore camera if available
+        const videoTrack = localStream.getVideoTracks()[0];
+        await sender.replaceTrack(videoTrack);
+      } else {
+        // Remove video sender if no camera
+        pc.removeTrack(sender);
       }
-    });
-    
-    // Update own video
-    const ownVideo = document.querySelector(`#participant-${window.user.id} video`);
+      
+      // Renegotiate
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      socket.emit('webrtc_offer', {
+        to: userId,
+        offer: offer
+      });
+      
+      console.log('Screen sharing stopped and negotiated with user:', userId);
+    }
+  }
+  
+  // Restore own video
+  const ownCard = document.querySelector(`#participant-${window.user.id}`);
+  if (ownCard) {
+    const ownVideo = ownCard.querySelector('video');
     if (ownVideo) {
-      ownVideo.srcObject = localStream;
+      if (localStream && localStream.getVideoTracks().length > 0) {
+        ownVideo.srcObject = localStream;
+      } else {
+        // If no camera, set to null or keep black
+        ownVideo.srcObject = localStream;  // Audio only stream
+      }
+      ownVideo.style.display = 'block';
     }
   }
   
