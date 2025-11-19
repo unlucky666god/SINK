@@ -486,68 +486,78 @@ function updateAudioButton() {
 
 // Toggle screen sharing
 async function toggleScreenShare() {
-  if (!isSharingScreen) {
-    try {
-      screenStream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          cursor: "always"
-        },
-        audio: false  // Don't include system audio to avoid conflicts
-      });
-      
-      // Replace or add video track in all peer connections
-      const videoTrack = screenStream.getVideoTracks()[0];
-      
-      for (const [userId, pc] of peerConnections.entries()) {
-        let sender = pc.getSenders().find(s => s.track?.kind === 'video');
-        
-        if (sender) {
-          // Replace existing video track
-          await sender.replaceTrack(videoTrack);
-        } else {
-          // Add new video track if no video sender exists
-          sender = pc.addTrack(videoTrack, screenStream);
-        }
-        
-        // Renegotiate to ensure changes take effect
-        const offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
-        socket.emit('webrtc_offer', {
-          to: userId,
-          offer: offer
-        });
-        
-        console.log('Screen share updated and negotiated with user:', userId);
-      }
-      
-      // Update own video to show screen share
-      const ownCard = document.querySelector(`#participant-${window.user.id}`);
-      if (ownCard) {
-        const ownVideo = ownCard.querySelector('video');
-        if (ownVideo) {
-          // Show screen stream instead of camera
-          ownVideo.srcObject = screenStream;
-          ownVideo.style.display = 'block';
-        }
-      }
-      
-      isSharingScreen = true;
-      
-      const btn = document.getElementById('toggle-screen-btn');
-      if (btn) {
-        btn.querySelector('img').src = '/static/imgs/shareScreenOff.svg';
-      }
-      
-      // Handle screen share stop
-      videoTrack.onended = () => {
-        stopScreenShare();
-      };
-    } catch (error) {
-      console.error('Error sharing screen:', error);
-    }
-  } else {
-    stopScreenShare();
-  }
+  alert("This function is in development now")
+  //if (!isSharingScreen) {
+  //  try {
+  //    screenStream = await navigator.mediaDevices.getDisplayMedia({
+  //      video: {
+  //        cursor: "always"
+  //      },
+  //      audio: false  // Don't include system audio to avoid conflicts
+  //    });
+  //    
+  //    // Replace or add video track in all peer connections
+  //    const videoTrack = screenStream.getVideoTracks()[0];
+//
+  //    for (const [userId, pc] of peerConnections.entries()) {
+  //      let videoSender = pc.getSenders().find(s => s.track?.kind === 'video');
+//
+  //      if (videoSender) {
+  //        // Replace existing video track
+  //        await videoSender.replaceTrack(videoTrack);
+  //      } else {
+  //        // Add new video track if no video sender exists
+  //        pc.addTrack(videoTrack, screenStream);
+  //      }
+//
+  //      // Ensure audio track is also sent
+  //      let audioSender = pc.getSenders().find(s => s.track?.kind === 'audio');
+  //      if (!audioSender && localStream) {
+  //        const audioTrack = localStream.getAudioTracks()[0];
+  //        if (audioTrack) {
+  //          pc.addTrack(audioTrack, localStream);
+  //        }
+  //      }
+//
+  //      // Renegotiate to ensure changes take effect
+  //      const offer = await pc.createOffer();
+  //      await pc.setLocalDescription(offer);
+  //      socket.emit('webrtc_offer', {
+  //        to: userId,
+  //        offer: offer
+  //      });
+//
+  //      console.log('Screen share updated and negotiated with user:', userId);
+  //    }
+  //    
+  //    // Update own video to show screen share
+  //    const ownCard = document.querySelector(`#participant-${window.user.id}`);
+  //    if (ownCard) {
+  //      const ownVideo = ownCard.querySelector('video');
+  //      if (ownVideo) {
+  //        // Show screen stream instead of camera
+  //        ownVideo.srcObject = screenStream;
+  //        ownVideo.style.display = 'block';
+  //      }
+  //    }
+  //    
+  //    isSharingScreen = true;
+  //    
+  //    const btn = document.getElementById('toggle-screen-btn');
+  //    if (btn) {
+  //      btn.querySelector('img').src = '/static/imgs/shareScreenOff.svg';
+  //    }
+  //    
+  //    // Handle screen share stop
+  //    videoTrack.onended = () => {
+  //      stopScreenShare();
+  //    };
+  //  } catch (error) {
+  //    console.error('Error sharing screen:', error);
+  //  }
+  //} else {
+  //  stopScreenShare();
+  //}
 }
 
 // Stop screen sharing
