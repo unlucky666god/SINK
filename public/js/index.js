@@ -35,7 +35,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     });
-    const dialogues = await dialoguesResponse.json();
+    let dialogues = [];
+    if (dialoguesResponse.ok) {
+      dialogues = await dialoguesResponse.json();
+    } else {
+      console.error('Failed to fetch dialogues:', dialoguesResponse.status);
+    }
+
+    // Ensure dialogues is an array
+    if (!Array.isArray(dialogues)) {
+      dialogues = [];
+    }
 
     // Set global dialogues
     window.dialogues = dialogues;

@@ -706,9 +706,13 @@ function showSection(section) {
 
 // Function to open chat
 function openChat(userId) {
+  // Ensure window.dialogues exists
+  if (!window.dialogues) window.dialogues = [];
+
   let chatUser = window.dialogues.find(d => d.interlocutor_id === userId);
   if (!chatUser) {
     // If no dialogue, find in friends
+    if (!window.user || !window.user.friends) return;
     chatUser = window.user.friends.find(f => f.id === userId);
     if (!chatUser) return;
     // Create a dialogue-like object

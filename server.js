@@ -10,8 +10,9 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const PORT = 3000;
-const JWT_SECRET = '666';
+// Настройки из переменных окружения
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || '666';
 
 // Store online users
 const onlineUsers = new Map(); // userId -> socketId
